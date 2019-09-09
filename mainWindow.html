@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Shopping list</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <a class="brand-logo center">Shopping list</a>
+        </div>
+    </nav>
+    <ul>
+        <!-- Items will go here -->
+    </ul>
+
+    <script>
+        const electron = require('electron');
+        const {ipcRenderer} = electron;
+        const ul = document.querySelector('ul');
+
+        // Catch add item
+        ipcRenderer.on('item:add', (e, item) => {
+            ul.className = 'collection'; // Add class collection to the ul
+
+            // Create li and add class 'collection-item'
+            const li = document.createElement('li');
+            li.classList.add('collection-item');
+            li.classList.add('center');
+
+            // Add 'title' attribute to li
+            li.setAttribute('title', 'Click once to cross, twice to delete.');
+
+            // Get text from item
+            const itemText = document.createTextNode(item);
+
+            // Append everything
+            li.appendChild(itemText);
+            ul.appendChild(li);
+        });
+
+        // Catch clear items
+        ipcRenderer.on('item:clear', () => {
+            ul.innerHTML='';
+            ul.className = '';
+        });
+
+        // Cross (or uncross) item
+        ul.addEventListener('click', (e) => {
+            if (e.target.classList.contains('crossed')){
+                e.target.classList.remove('crossed');
+            } else {
+                e.target.classList.add('crossed');
+            }            
+        });
+
+        // Remove indivudual item
+        ul.addEventListener('dblclick', (e) => {
+            e.target.remove();
+            // If there's no items, delete 'collection' class on ul
+            if(ul.children.length == 0){
+                ul.className = '';
+            }
+        });
+    </script>
+</body>
+</html>

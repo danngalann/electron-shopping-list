@@ -1,0 +1,8 @@
+.crossed {
+    text-decoration: line-through;
+    color: #ccc;
+}
+
+ul > li:hover {
+    cursor: pointer;
+}
